@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="resources/css/photon.css">
+    <link rel="stylesheet" href="resources/css/emula.css">
+
+    <!-- Javascript -->
+
+ 
+
+  </head>
+  <body>
+    <div class="window" id="app-box">
+
+      <!-- .toolbar-header sits at the top of your app -->
+      <header class="toolbar toolbar-header" id="toolbar-box">
+	    
+	      <div class="btn-group">
+	      		<button v-on:click="userCommMethod('ser')" :class="user_comm_method_ser?'active':''" class="btn btn-default">
+	        	<span>Serial</span>
+	     		</button>
+	      		<button v-on:click="userCommMethod('udp')" :class="user_comm_method_udp?'active':''" class="btn btn-default">
+	        	<span>UDP</span>
+	      		</button>
+	    </div>
+
+	    <span>
+		      <div class="btn-group">
+		        <button :class="online?'btn-negative':'btn-positive'" class="btn btn-mini btn-positive icon icon-signal" v-on:click="serverStartStop()">
+		        {{ action }}
+		        </button>
+		      </div>
+		      <span class="icon icon-record" 
+		      :class="{ 'emula-icon-online': online, 'emula-icon-offline': offline }" >
+		      </span>
+		      <span >{{ online?"online":"offline"}}</span>
+    	</span>
+      	
+      </header>
+
+      <!-- Your app's content goes inside .window-content -->
+      <div class="window-content">
+        <div class="pane-group" id="control-box">
+
+
+
+          <navig-area>
+
+            <navig-section title="General">
+            	<navig-entry title='Communication' id='0' active-state='active'></navig-entry>
+              	<navig-entry title='Emulation' id='1' active-state=''></navig-entry>
+
+            </navig-section>
+            <navig-section title="Inverter">
+               <navig-entry title='General' id='2' active-state=''></navig-entry>
+               <navig-entry title='Flags & Warnings' id='3' active-state=''></navig-entry>
+            </navig-section>
+
+          </navig-area>
+
+
+          <div class="pane" id="config-box">
+            <config-panel navig="Communication"   showfirst="true">
+            <span>
+            <!--
+            	<div>
+			  		<label > Communication medium: 
+			   		<select v-model="comm.mode">
+			  			<option value="serial">Serial Communication</option>
+				    	<option value="udp" >UDP</option>
+			  		</select>
+			  		</label>
+			  	</div>
+			  	-->
+          		<div>Serial Settings : </div>
+          		<config-input-text  type="text" label="port" v-model="comm.port"></config-input-text>
+
+          		<config-input-text  type="number" label="Baudrate" disabled v-model="comm.baudrate"></config-input-text>
+          		<config-input-text  type="number" label="Stop Bit" disabled v-model="comm.stop_bit"></config-input-text>
+          		<config-input-text  type="number" label="Data Bits" disabled v-model="comm.data_bits"></config-input-text>
+          		<config-input-text  type=text" label="Parity" disabled v-model="comm.parity"></config-input-text>
+          		</span>
+          		<span>
+          		<div>UDP Settings : </div>
+          		<config-input-text  type="number" label="Listening port" v-model="comm.udp_port"></config-input-text>
+          		</span>
+          	</config-panel>
+          	<config-panel navig="Emulation">
+          		<div>
+				  	<label > Voltronic Axpert model identification: 
+				   	<select v-model="configs.model_hint">
+				  		<option value="king">Axpert King</option>
+					    <option value="4k5k" >4000/5000 Series</option>
+					    <option value="other">Other models</option>
+				  	</select>
+				  	</label>
+				</div>
+          
+          	</config-panel>
+ 
+          	<config-panel navig="General">
+   			 <span>
+				  <div>
+				  	<label > Inverter Mode: 
+				   	<select v-model="configs.mode">
+				  		<option value="P">Power On (P)</option>
+					    <option value="S" >Standby (S)</option>
+					    <option value="L">Line (L)</option>
+					    <option value="B">Battery (B)</option>
+					    <option value="Y">Bypass (Y)</option>
+					    <option value="E">ECO (E)</option>
+					    <option  value="F" >Fault (F)</option>
+					    <option value="H">Power Saving (H)</option>
+				  	</select>
+				  	</label>
+				  	</div>
+
+				  <config-input-text  type="number" label="grid voltage" v-model="configs.general_status.grid_voltage"></config-input-text>
+				  <config-input-text  type="number" label="grid frequency" v-model="configs.general_status.grid_frequency"></config-input-text>
+				  <config-input-text  type="number" label="AC output voltage" v-model="configs.general_status.ac_out_voltage"></config-input-text>
+				  <config-input-text  type="number" label="AC output frequency" v-model="configs.general_status.ac_out_frequency"></config-input-text>
+				  <config-input-text  type="number" label="AC output apparent power" v-model="configs.general_status.ac_out_apparent_power"></config-input-text>
+				  <config-input-text  type="number" label="AC output active power" v-model="configs.general_status.ac_out_active_power"></config-input-text>
+				  <config-input-text  type="number" label="output load percentage" v-model="configs.general_status.out_load_percent"></config-input-text>
+				  <config-input-text  type="number" label="Bus voltage" v-model="configs.general_status.bus_voltage"></config-input-text>
+				  <config-input-text  type="number" label="Battery voltage" v-model="configs.general_status.battery_voltage"></config-input-text>
+				  <config-input-text  type="number" label="Battery charging current" v-model="configs.general_status.battery_charging_current"></config-input-text>
+				  <config-input-text  type="number" label="Battery capacity" v-model="configs.general_status.battery_capacity"></config-input-text>
+				  <config-input-text  type="number" label="Heatsink temparature" v-model="configs.general_status.heat_sink_temperature"></config-input-text>
+				  <config-input-text  type="number" label="PV input current for battery" v-model="configs.general_status.pv_in_current_battery"></config-input-text>
+				  <config-input-text  type="number" label="PV input voltage 1" v-model="configs.general_status.pv_in_voltage_1"></config-input-text>
+				   <config-input-text  type="number" label="Battery voltage  from SCC" v-model="configs.general_status.battery_voltage_scc"></config-input-text>
+				  <config-input-text  type="number" label="Battery discharge current" v-model="configs.general_status.battery_discharge_current"></config-input-text>
+
+				  <config-input-cb  label="Status: Add SBU priority version" v-model="configs.general_status.status_add_sbu_priority_version"></config-input-cb>
+				  <config-input-cb  label="Status: Configuration changed" v-model="configs.general_status.status_configuration_status_changed"></config-input-cb>
+				  <config-input-cb  label="Status: Firmware version updated" v-model="configs.general_status.status_scc_firmware_version_updated"></config-input-cb>
+				  <config-input-cb  label="Status: Load on" v-model="configs.general_status.status_load"></config-input-cb>
+				  <config-input-cb  label="Status: Battery voltage to steady charging" v-model="configs.general_status.status_battery_voltage_steady"></config-input-cb>
+				  <config-input-cb  label="Status: Charging" v-model="configs.general_status.status_charging"></config-input-cb>
+				  <config-input-cb  label="Status: Charging SCC" v-model="configs.general_status.status_charging_scc"></config-input-cb>
+				  <config-input-cb  label="Status: Charging AC" v-model="configs.general_status.status_charging_ac"></config-input-cb>
+				   <config-input-text  type="number" label="Battery voltage offset for fans on" v-model="configs.general_status.battery_voltage_offset_fans"></config-input-text>
+				   <config-input-text  type="number" label="EEPROM version" v-model="configs.general_status.eeprom_version"></config-input-text>
+				   <config-input-text  type="number" label="PV charging power" v-model="configs.general_status.pv_charging_power"></config-input-text>
+				   <config-input-cb  label="Status: Charging to floating mode" v-model="configs.general_status.status_charging_floating_mode"></config-input-cb>
+				   <config-input-cb  label="Status: Switch on" v-model="configs.general_status.status_switch_on"></config-input-cb>
+				   <config-input-cb  label="Status: dustproof installed" v-model="configs.general_status.status_dustproof_installed"></config-input-cb>
+			  </span>
+			  <span>
+				   <config-input-text  type="number" label="AC max charging current" v-model="configs.general_status.ac_max_charging_current"></config-input-text>
+				  <config-input-text  type="number" label="max charging current" v-model="configs.general_status.max_charging_current"></config-input-text>
+				  <config-input-text  type="number" label="AC input voltage range" v-model="configs.general_status.ac_in_voltage_range"></config-input-text>
+				  <config-input-text  type="number" label="Output source priority" v-model="configs.general_status.out_source_priority"></config-input-text>
+				  <config-input-text  type="number" label="Battery recharge voltage" v-model="configs.general_status.battery_recharge_voltage"></config-input-text>
+
+				  <config-input-text  type="number" label="Charger source priority" v-model="configs.general_status.charger_source_priority"></config-input-text>
+				  <config-input-text  type="number" label="Battery type" v-model="configs.general_status.battery_type"></config-input-text>
+
+				  <div>
+				  	<label > Output Mode: 
+				  	<select v-model="configs.general_status.out_mode">
+				  		<option value="0">Single Machine Output</option>
+				  		<option value="1">Parallel Output</option>
+				  		<option value="2">Phase 1 of 3 Output</option>
+				  		<option value="3">Phase 2 of 3 Output</option>
+				  		<option value="4">Phase 3 of 3 Output</option>	    
+				  	</select>
+				  	</label>
+				  </div>
+
+				  <config-input-text  type="number" label="Battery float voltage" v-model="configs.general_status.battery_float_voltage"></config-input-text>
+				  <config-input-text  type="number" label="Battery bulk voltage" v-model="configs.general_status.battery_bulk_voltage"></config-input-text>
+				  <config-input-text  type="number" label="Battery under voltage" v-model="configs.general_status.battery_under_voltage"></config-input-text>
+				  <config-input-text  type="number" label="Battery redischarge voltage" v-model="configs.general_status.battery_redischarge_voltage"></config-input-text>
+				  <config-input-text  type="number" label="PV Ok condition" v-model="configs.general_status.pv_ok_condition_parallel"></config-input-text>
+				  <config-input-text  type="number" label="PV power balance" v-model="configs.general_status.pv_power_balance"></config-input-text>
+				  <config-input-text  type="number" label="CV stage max charging time" v-model="configs.general_status.max_charging_time_cv"></config-input-text>
+				  <config-input-text  type="number" label="Operation logic (King)" v-model="configs.general_status.operation_logic_king"></config-input-text>
+
+          	</span>
+          	</config-panel>
+          	<config-panel navig="Flags & Warnings">
+          	<span>
+	          	<div>Flags :</div>
+	  			<div>
+	 
+				  <config-input-cb  label="Buzzer" v-model="configs.flags.buzzer"></config-input-cb>
+				  <config-input-cb  label="Bypass function" v-model="configs.flags.bypass_function"></config-input-cb>
+				  <config-input-cb  label="Frobidden Bypass function" v-model="configs.flags.bypass_function_forbidden"></config-input-cb>
+				  <config-input-cb  label="Power Saving" v-model="configs.flags.power_saving"></config-input-cb>
+				  <config-input-cb  label="LCD display Escape to default page after 1min" v-model="configs.flags.lcd_escape"></config-input-cb>
+				  <config-input-cb  label="overload restart" v-model="configs.flags.overload_restart"></config-input-cb>
+				  <config-input-cb  label="over temparature restart" v-model="configs.flags.overtemperature_restart"></config-input-cb>
+				  <config-input-cb  label="backlight on" v-model="configs.flags.backlights_on"></config-input-cb>
+				  <config-input-cb  label="alarm on when primary source interrupt" v-model="configs.flags.alarm_primary_interrupt"></config-input-cb>
+				  <config-input-cb  label="fault code record" v-model="configs.flags.fault_code_record"></config-input-cb>
+
+		
+				</div>
+			</span>
+			<span>
+       			<div>Warnings :</div>
+          		<config-input-cb  label="Inverter Fault" v-model="configs.warnings.inverter_fault"></config-input-cb>
+          		<config-input-cb  label="Bus Over" v-model="configs.warnings.bus_over"></config-input-cb>
+          		<config-input-cb  label="Bus Under" v-model="configs.warnings.bus_under"></config-input-cb>
+          		<config-input-cb  label="Bus soft fail" v-model="configs.warnings.bus_soft_fail"></config-input-cb>
+          		<config-input-cb  label="Line fail" v-model="configs.warnings.line_fail"></config-input-cb>
+          		<config-input-cb  label="OPV short" v-model="configs.warnings.opvshort"></config-input-cb>
+          		<config-input-cb  label="Inverter voltage too low" v-model="configs.warnings.inverter_voltage_too_low"></config-input-cb>
+          		<config-input-cb  label="Inverter voltage too high" v-model="configs.warnings.inverter_voltage_too_high"></config-input-cb>
+          		<config-input-cb  label="Over temparature" v-model="configs.warnings.over_temperature"></config-input-cb>
+          		<config-input-cb  label="Fan locked" v-model="configs.warnings.fan_locked"></config-input-cb>
+          		<config-input-cb  label="Battery voltage high" v-model="configs.warnings.battery_voltage_high"></config-input-cb>
+          		<config-input-cb  label="Battery low alarm" v-model="configs.warnings.battery_low_alarm"></config-input-cb>
+          		<config-input-cb  label="over charge" v-model="configs.warnings.overcharge"></config-input-cb>
+          		<config-input-cb  label="Battery under shutdown" v-model="configs.warnings.battery_under_shutdown"></config-input-cb>
+          		<config-input-cb  label="Battery derating" v-model="configs.warnings.battery_derating"></config-input-cb>
+          		<config-input-cb  label="Over load" v-model="configs.warnings.over_load"></config-input-cb>
+
+          		<config-input-cb  label="EEPROM fault" v-model="configs.warnings.eeprom_fault"></config-input-cb>
+          		<config-input-cb  label="Inverter over current" v-model="configs.warnings.inverter_over_current"></config-input-cb>
+          		<config-input-cb  label="Inverter soft fail" v-model="configs.warnings.inverter_soft_fail"></config-input-cb>
+          		<config-input-cb  label="Self test fail" v-model="configs.warnings.self_test_fail"></config-input-cb>
+          		<config-input-cb  label="OP DC voltage over" v-model="configs.warnings.op_dc_voltage_over"></config-input-cb>
+          		<config-input-cb  label="Bat open" v-model="configs.warnings.bat_open"></config-input-cb>
+          		<config-input-cb  label="Current sensor fail" v-model="configs.warnings.current_sensor_fail"></config-input-cb>
+          		<config-input-cb  label="Battery short" v-model="configs.warnings.battery_short"></config-input-cb>
+          		<config-input-cb  label="Power limit" v-model="configs.warnings.power_limit"></config-input-cb>
+          		<config-input-cb  label="PV voltage high" v-model="configs.warnings.pv_voltage_high"></config-input-cb>
+          		<config-input-cb  label="MPPT overload fault" v-model="configs.warnings.mppt_overload_fault"></config-input-cb>
+          		<config-input-cb  label="MPPT overload warning" v-model="configs.warnings.mppt_overload_warning"></config-input-cb>
+          		<config-input-cb  label="Battery too low to charge" v-model="configs.warnings.battery_too_low_to_charge"></config-input-cb>
+          		<config-input-cb  label="DC/DC over current" v-model="configs.warnings.dcdc_over_current"></config-input-cb>
+
+          		<config-input-text  type="number" label="Fault Code (Axpert King)" v-model="configs.warnings.fault_code"></config-input-text>
+          	</span>
+          	</config-panel>
+   
+          </div>
+
+
+        </div>
+      </div>
+      <footer id="footer-box">
+      	<console-area>
+      		<console-event-line v-for="cline in clines" :type="cline.type" >{{ cline.content }}</console-event-line>
+
+      	</console-area>
+      </footer>
+    </div>
+    <!-- javascript -->
+    <script src="js/vue.js"></script>
+    <script src="js/menu.js"></script>
+  </body>
+</html>

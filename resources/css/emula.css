@@ -1,0 +1,87 @@
+label{
+	margin-bottom: 0px;
+}
+
+
+#config-box{
+	min-height : 400px;
+}
+
+#console-box{
+	height: 100%;
+	background-color: #121212;
+	color:white;
+}
+
+.allow-copy{
+	  -webkit-user-select: text;  /* Chrome 49+ */
+  -moz-user-select: text;     /* Firefox 43+ */
+  -ms-user-select: text;      /* No support yet */
+  user-select: text;          /* Likely future */  
+}
+
+
+.emula-icon-online{
+	color: #34c84a;
+}
+.emula-icon-offline{
+	color: #fc605b;
+}
+
+/*Config Panels*/
+.config-panel{
+	padding-left:20px;
+	padding-top: 10px;
+	background-color: #eee;/*#ededed;*/
+	height: 100%;
+	overflow:auto;
+	display: flex;
+}
+
+/* Console */
+#footer-box{
+	height: 40%;
+	}
+
+#console-tools-box{
+	background-color:#f5f5f4;
+	color:#333;
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	padding-left: 3px;
+
+}
+
+#console-cmd{
+	border: none;
+	padding-left: 5px;
+	height:100%;
+}
+
+#console-body{
+		overflow: scroll;
+
+		height: 100%;
+		padding-bottom: 50px;
+}
+
+.cons-ln{
+
+	//border-bottom: 1px solid #333;
+	margin-top: 1px;
+	margin-left : 5px;
+	margin-right: 5px;
+	padding-left: 3px;
+	width:auto;
+}
+
+.cons-ln-default{
+		color: white;
+}
+.cons-ln-rx{
+	color: #2f995f;
+}
+
+.cons-ln-tx{
+	color: #992f2f;
+}
