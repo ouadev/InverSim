@@ -44,7 +44,7 @@ var TxtInvStatus =
 		fault_code_record : true
 	},
 	general : {
-		serial_number : "INVERSIM-00000", //show the same on for the long version
+		serial_number : "22102010210599", //show the same on for the long version
 		firmware_version : "VERFW:00000.10", //QVFW 
 		firmware_version_2 : "VERFW2:FFFFF.FF",
 
@@ -52,11 +52,11 @@ var TxtInvStatus =
 	rated: {
 		grid_voltage : 241.0,
 		grid_current: 5.0,
-		ac_out_voltage: 0.0,
+		ac_out_voltage: 220.0,
 		ac_out_frequency : 50.0,
-		ac_out_current : 1.0,
+		ac_out_current : 5.0,
 		ac_out_apparent_power : 5555,
-		ac_out_active_power : 444,
+		ac_out_active_power : 4433,
 		battery_voltage : 44.6,
 		battery_recharge_voltage : 44.1,
 		battery_under_voltage : 77.9,
@@ -258,15 +258,15 @@ var TxtInvStatus =
 		out_source_priority:0,
 		charger_source_priority : 0,
 		battery_type : 0,
-		dis_buzzer : 0,
-		en_power_saving : 0,
-		en_overload_restart : 0,
-		en_overtemperature_restart : 0,
-		en_backlight : 1,
-		en_alarm_primary_source_interrupt: 1,
-		en_fault_code_record : 0,
-		overload_bypass : 0,
-		en_lcd_escape : 1,
+		dis_buzzer : false,
+		en_power_saving : false,
+		en_overload_restart : false,
+		en_overtemperature_restart : false,
+		en_backlight : true,
+		en_alarm_primary_source_interrupt: true,
+		en_fault_code_record : false,
+		overload_bypass : false,
+		en_lcd_escape : false,
 		out_mode : 0,
 		battery_redischarge_voltage: 54.0, //differ
 		pv_ok_condition_parallel : 0,
@@ -337,7 +337,7 @@ var processCommand =  function(cmdbytes){
 
 
 	}else if( cmd == "QSID" ){
-		resp += TxtInvStatus.general.serial_number + "000000";
+		resp += "14"+TxtInvStatus.general.serial_number + "0000";
 	}else if( cmd == "QVFW"){
 		resp += TxtInvStatus.general.firmware_version;
 
@@ -351,7 +351,7 @@ var processCommand =  function(cmdbytes){
 		resp += floatStr(TxtInvStatus.rated.ac_out_frequency, 2,1) + " ";
 		resp += floatStr(TxtInvStatus.rated.ac_out_current, 2,1) + " ";
 		resp +=   intStr(TxtInvStatus.rated.ac_out_apparent_power, 4) + " ";
-		resp +=   intStr(TxtInvStatus.rated.ac_out_active_power, 3) + " ";
+		resp +=   intStr(TxtInvStatus.rated.ac_out_active_power, 4) + " ";
 		resp += floatStr(TxtInvStatus.rated.battery_voltage, 2,1) + " ";
 		resp += floatStr(TxtInvStatus.rated.battery_recharge_voltage, 2,1) + " ";
 		resp += floatStr(TxtInvStatus.rated.battery_under_voltage, 2,1) + " ";
@@ -370,10 +370,10 @@ var processCommand =  function(cmdbytes){
 		resp += floatStr(TxtInvStatus.rated.battery_redischarge_voltage, 2,1) + " ";
 		resp += TxtInvStatus.rated.pv_ok_condition_parallel + " ";
 		resp += TxtInvStatus.rated.pv_power_balance + " ";
-		resp +=   intStr(TxtInvStatus.rated.max_charging_time_cv, 3) + " ";
+		resp +=   intStr(TxtInvStatus.rated.max_charging_time_cv, 3);
 
 		if (TxtInvStatus.model_hint == "king"){
-			resp +=TxtInvStatus.rated.operation_logic_king;
+			resp += " " + TxtInvStatus.rated.operation_logic_king;
 		}
 		
 
@@ -521,15 +521,15 @@ var processCommand =  function(cmdbytes){
 		resp += TxtInvStatus.default.out_source_priority + " ";
 		resp += TxtInvStatus.default.charger_source_priority + " ";
 		resp += TxtInvStatus.default.battery_type + " ";
-		resp += TxtInvStatus.default.dis_buzzer + " ";
-		resp += TxtInvStatus.default.en_power_saving + " ";
-		resp += TxtInvStatus.default.en_overload_restart + " ";
-		resp += TxtInvStatus.default.en_overtemperature_restart + " ";
-		resp += TxtInvStatus.default.en_backlight + " ";
-		resp += TxtInvStatus.default.en_alarm_primary_source_interrupt + " ";
-		resp += TxtInvStatus.default.en_fault_code_record + " ";
-		resp += TxtInvStatus.default.overload_bypass + " ";
-		resp += TxtInvStatus.default.en_lcd_escape + " ";
+		resp += (TxtInvStatus.default.dis_buzzer ? "1":"0" ) + " ";
+		resp += (TxtInvStatus.default.en_power_saving ? "1":"0" ) + " ";
+		resp += (TxtInvStatus.default.en_overload_restart  ? "1":"0" ) + " ";
+		resp += (TxtInvStatus.default.en_overtemperature_restart ? "1":"0" ) + " ";
+		resp += (TxtInvStatus.default.en_backlight ? "1":"0" ) + " ";
+		resp += (TxtInvStatus.default.en_alarm_primary_source_interrupt ? "1":"0" ) + " ";
+		resp += (TxtInvStatus.default.en_fault_code_record ? "1":"0" ) + " ";
+		resp += (TxtInvStatus.default.overload_bypass ? "1":"0" ) + " ";
+		resp += (TxtInvStatus.default.en_lcd_escape ? "1":"0" ) + " ";
 		resp += TxtInvStatus.default.out_mode + " ";
 		resp += floatStr(TxtInvStatus.default.battery_redischarge_voltage, 2, 1) + " ";
 		resp += TxtInvStatus.default.pv_ok_condition_parallel + " ";
@@ -539,10 +539,10 @@ var processCommand =  function(cmdbytes){
 
 
 	}else if( cmd == "QMCHGCR"){
-		resp += TxtInvStatus.rated.max_charging_current[device];
+		resp += TxtInvStatus.rated.max_charging_current;
 
 	}else if( cmd == "QMUCHGCR"){
-		resp += TxtInvStatus.rated.max_charging_current[device];
+		resp += TxtInvStatus.rated.max_charging_current;
 
 	}else if (cmd == "QOPM"){
 		if (TxtInvStatus.model_hint == "4k5k"){
@@ -668,12 +668,14 @@ var processCommand =  function(cmdbytes){
 		TxtInvStatus.general_status.battery_type = TxtInvStatus.default.battery_type;
 		
 		TxtInvStatus.flags.buzzer =  ! TxtInvStatus.default.dis_buzzer;
-		TxtInvStatus.flags.power_saving =  ! TxtInvStatus.default.en_power_saving;
-		TxtInvStatus.flags.overload_restart =  ! TxtInvStatus.default.en_overload_restart;
-		TxtInvStatus.flags.backlights_on =  ! TxtInvStatus.default.en_backlight;
-		TxtInvStatus.flags.alarm_primary_interrupt =  ! TxtInvStatus.default.en_alarm_primary_source_interrupt;
-		TxtInvStatus.flags.overload_bypass =  ! TxtInvStatus.default.overload_bypass;
-		TxtInvStatus.flags.lcd_escape =  ! TxtInvStatus.default.en_lcd_escape;
+		TxtInvStatus.flags.power_saving =   TxtInvStatus.default.en_power_saving;
+		TxtInvStatus.flags.overload_restart =   TxtInvStatus.default.en_overload_restart;
+		TxtInvStatus.flags.backlights_on =   TxtInvStatus.default.en_backlight;
+		TxtInvStatus.flags.alarm_primary_interrupt =   TxtInvStatus.default.en_alarm_primary_source_interrupt;
+		TxtInvStatus.flags.overload_bypass =   TxtInvStatus.default.overload_bypass;
+		TxtInvStatus.flags.lcd_escape =   TxtInvStatus.default.en_lcd_escape;
+		TxtInvStatus.flags.overtemperature_restart = TxtInvStatus.default.en_overtemperature_restart;
+		TxtInvStatus.flags.fault_code_record = TxtInvStatus.default.en_fault_code_record;
 
 		TxtInvStatus.general_status.out_mode = TxtInvStatus.default.out_mode;
 		TxtInvStatus.general_status.battery_float_voltage = TxtInvStatus.default.charging_float_voltage;
@@ -710,78 +712,136 @@ var processCommand =  function(cmdbytes){
 		
 		
 	}else if (cmd.startsWith("MNCHGC")){
-		resp+="NAK";
-		if (cmd.length == 10){
+		if(cmd.length != 10){
+			resp+="NAK";
+		}else{
 			var current = cmd.substring(6,10);
 			if(!isNaN(current)){
 				TxtInvStatus.general_status.max_charging_current = parseInt(current);
 				resp += "ACK";
-			isSetCommand = true;
+				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 			
 		}
 		
 
 	}else if (cmd.startsWith("MUCHGC")){
-		resp+="NAK";
-		if (cmd.length == 8){
-			var current = cmd.substring(5,8);
+		
+		if (cmd.length != 9){
+			resp+="NAK";
+		}else{
+			var current = cmd.substring(6,9);
 			if (!isNaN(current)){
 				TxtInvStatus.general_status.ac_max_charging_current = parseInt(current);
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
 	}else if (cmd.startsWith("F")){ //should be after all the words that starts with F
-		resp+="NAK";
-		if (cmd.length == 3){
+		if (cmd.length != 3){
+			resp+="NAK";
+		}else{
 			var freq = cmd.substring(1,3);
 			if(!isNaN(freq)){
 				TxtInvStatus.general_status.ac_out_frequency = parseInt(freq);
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
+	}else if (cmd.startsWith("POPLG") ){
+		if (TxtInvStatus.model_hint == "king"){
+			if (cmd.length != 7){
+				resp+="NAK";
+			}else{
+				var type = cmd.substring(5,7);
+				if(type == "00" || type == "01" || type == "02" ){
+					TxtInvStatus.general_status.operation_logic_king  = parseInt(type);
+					resp += "ACK";
+					isSetCommand = true;
+				}else{
+					resp += "NAK";
+				}	
+			}
+		}else{
+			resp +="NAK";
+		}
+		
+	}else if (cmd.startsWith("POPM")){
+		if (TxtInvStatus.model_hint == "4k5k"){
+			if (cmd.length != 6){
+				resp+="NAK";
+			}else{
+				var type = cmd.substring(4,6);
+				if(!isNaN(type)){
+					TxtInvStatus.general_status.out_mode = parseInt(type);
+					resp += "ACK";
+					isSetCommand = true;
+				}else{
+					resp += "NAK";
+				}
+			}
+		}else{
+			resp += "NAK";
+			//isSetCommand = true;
+		}
 	}else if (cmd.startsWith("POP")){
-		resp+="NAK";
-		if (cmd.length == 5){
+		if (cmd.length != 5){
+			resp+="NAK";
+		}else{
 			var prio = cmd.substring(3,5);
 			if(!isNaN(prio)){
 				TxtInvStatus.general_status.out_source_priority = parseInt(prio);
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
 	}else if (cmd.startsWith("PBCV")){
 		//PBCVnn.n
-		resp+="NAK";
-		if (cmd.length == 8){
+		if (cmd.length != 8){
+			resp+="NAK";
+		}else{
 			var volt = cmd.substring(4,8);
 			if(volt.charAt(2)=="." && !isNaN(volt)){
 				TxtInvStatus.general_status.battery_recharge_voltage = parseFloat(volt);
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
 	}else if (cmd.startsWith("PBDV")){
 		//PBDVnn.n
-		resp+="NAK";
-		if (cmd.length == 8){
+		if (cmd.length != 8){
+			resp+="NAK";
+		}else{
 			var volt = cmd.substring(4,8);
 			if(volt.charAt(2)=="." && !isNaN(volt)){
 				TxtInvStatus.general_status.battery_redischarge_voltage = parseFloat(volt);
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
 	}else if (cmd.startsWith("PCP")){
-		resp+="NAK";
-		if (cmd.length == 5){
+		if (cmd.length != 5){
+			resp+="NAK";
+		}else{
 			var prio = cmd.substring(3,5);
 			if(!isNaN(prio)){
 				TxtInvStatus.general_status.charger_source_priority = parseInt(prio);
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
 	}else if (cmd.startsWith("PGR")){
@@ -789,85 +849,88 @@ var processCommand =  function(cmdbytes){
 		isSetCommand = true;
 		//todo: meaning ?
 	}else if (cmd.startsWith("PBT")){
-		resp+="NAK";
-		if (cmd.length == 5){
+		if (cmd.length != 5){
+			resp+="NAK";
+		}else{
 			var type = cmd.substring(3,5);
 			if(!isNaN(type)){
 				TxtInvStatus.general_status.battery_type = parseInt(type);
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
 
-	}else if (cmd.startsWith("POPM")){
-		if (TxtInvStatus.model_hint == "4k5k"){
-			resp+="NAK";
-			if (cmd.length == 6){
-				var type = cmd.substring(4,6);
-				if(!isNaN(type)){
-					TxtInvStatus.general_status.out_mode = parseInt(type);
-					resp += "ACK";
-					isSetCommand = true;
-				}
-			}
-		}else{
-			resp += "NAK";
-			//isSetCommand = true;
-		}
 	}else if (cmd.startsWith("PPCP")){
 		resp += "NAK";
 		isSetCommand = true;
 		//NO PARALLEL
 	}else if (cmd.startsWith("PSDV")){
 		//PSDVnn.n
-		resp+="NAK";
-		if (cmd.length == 8){
+		if (cmd.length != 8){
+			resp+="NAK";
+		}else{
 			var volt = cmd.substring(4,8);
 			if(volt.charAt(2)=="." && !isNaN(volt)){
 				TxtInvStatus.general_status.battery_under_voltage = parseFloat(volt);
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
 	}else if (cmd.startsWith("PCVV")){
-		resp+="NAK";
-		if (cmd.length == 8){
+		if (cmd.length != 8){
+			resp+="NAK";
+		}else{
 			var volt = cmd.substring(4,8);
 			if(volt.charAt(2)=="." && !isNaN(volt)){
 				//todo: tbd
 				//TxtInvStatus.general_status.battery_under_voltage = parseFloat(volt);
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
 	}else if (cmd.startsWith("PBFT")){
-		resp+="NAK";
-		if (cmd.length == 8){
+		if (cmd.length != 8){
+			resp+="NAK";
+		}else{
 			var volt = cmd.substring(4,8);
 			if(volt.charAt(2)=="." && !isNaN(volt)){
 				TxtInvStatus.general_status.battery_float_voltage = parseFloat(volt);
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
 	}else if (cmd.startsWith("PPVOKC")){
-		resp+="NAK";
-		if (cmd.length == 7){
+		if (cmd.length != 7){
+			resp+="NAK";
+		}else{
 			var type = cmd.substring(6,7);
-			if(!isNaN(type)){
+			if(type == "0" || type == "1" ){
 				TxtInvStatus.general_status.pv_ok_condition_parallel = parseInt(type);
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
 	}else if (cmd.startsWith("PSPB")){
-		resp+="NAK";
-		if (cmd.length == 5){
+		if (cmd.length != 5){
+			resp+="NAK";
+		}else{
 			var type = cmd.substring(4,5);
-			if(!isNaN(type)){
+			if(type == "0" || type == "1"){
 				TxtInvStatus.general_status.pv_power_balance = parseInt(type);
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
 	}else if (cmd == "QMN" ){
@@ -875,66 +938,84 @@ var processCommand =  function(cmdbytes){
 	}else if (cmd == "QGMN"){
 		resp += "013"; //todo: get list of models and fix this
 	}else if (cmd.startsWith("PBEQE") ){
-		resp+="NAK";
-		if (cmd.length == 6){
+		if (cmd.length != 6){
+			resp+="NAK";
+		}else{
 			var type = cmd.substring(5,6);
 			if(type == "0" || type == "1"){
 				TxtInvStatus.battery_equalization.enabled = (type != '0');
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
 	}else if (cmd.startsWith("PBEQT")){
-		resp+="NAK";
-		if (cmd.length == 8){
+		if (cmd.length != 8){
+			resp+="NAK";
+		}else{
 			var type = cmd.substring(5,8);
 			if(!isNaN(type)){
 				TxtInvStatus.battery_equalization.time = parseInt(type);
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
 	}else if (cmd.startsWith("PBEQP")){
-		resp+="NAK";
-		if (cmd.length == 8){
+		if (cmd.length != 8){
+			resp+="NAK";
+		}else{
 			var type = cmd.substring(5,8);
 			if(!isNaN(type)){
 				TxtInvStatus.battery_equalization.period = parseInt(type);
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
 
 	}else if (cmd.startsWith("PBEQV")){
-		resp+="NAK";
-		if (cmd.length == 10){
+		if (cmd.length != 10){
+			resp+="NAK";
+		}else{
 			var val = cmd.substring(5,10);
 			if(val.charAt(2)=="." && !isNaN(val)){
 				TxtInvStatus.battery_equalization.voltage = parseFloat(val);
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
 
 	}else if (cmd.startsWith("PBEQOT")){
-		resp+="NAK";
-		if (cmd.length == 9){
+		if (cmd.length != 9){
+			resp+="NAK";
+		}else{
 			var type = cmd.substring(6,9);
 			if(!isNaN(type)){
 				TxtInvStatus.battery_equalization.overtime = parseInt(type);
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
 
 	}else if (cmd.startsWith("PBEQA")){
-		resp+="NAK";
-		if (cmd.length == 6){
+		if (cmd.length != 6){
+			resp+="NAK";
+		}else{
 			var type = cmd.substring(5,6);
 			if(type == "0" || type == "1"){
 				TxtInvStatus.battery_equalization.active = (type != '0');
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
 
@@ -943,37 +1024,25 @@ var processCommand =  function(cmdbytes){
 		resp += intStr(TxtInvStatus.battery_equalization.time, 3) + " ";
 		resp += intStr(TxtInvStatus.battery_equalization.period, 3) + " ";
 		resp += intStr(TxtInvStatus.battery_equalization.max_current, 3) + " ";
-		resp += "FFF" + " "; //reserved
+		resp += "..." + " "; //reserved
 		resp += floatStr(TxtInvStatus.battery_equalization.voltage, 2, 2) + " ";
-		resp += "HHH" +  " "; //reserved
+		resp += "..." +  " "; //reserved
 		resp += intStr(TxtInvStatus.battery_equalization.overtime, 3) + " ";
 		resp += TxtInvStatus.battery_equalization.active ? "1 ":"0 ";
-		resp += "KKKK" + " "; //reserved
+		resp += "..." + " "; //reserved
 	}else if (cmd.startsWith("PCVT") ){
-		resp+="NAK";
-		if (cmd.length == 7){
+		if (cmd.length != 7){
+			resp+="NAK";
+		}else{
 			var type = cmd.substring(4,7);
 			if(!isNaN(type)){
 				TxtInvStatus.general_status.max_charging_time_cv = parseInt(type);
 				resp += "ACK";
 				isSetCommand = true;
+			}else{
+				resp += "NAK";
 			}
 		}
-	}else if (cmd == "POPLG"){
-		if (TxtInvStatus.model_hint == "king"){
-			resp+="NAK";
-			if (cmd.length == 7){
-				var type = cmd.substring(5,7);
-				if(!isNaN(type)){
-					TxtInvStatus.general_status.operation_logic_king  = parseInt(type);
-					resp += "ACK";
-					isSetCommand = true;
-				}
-			}
-		}else{
-			resp +="NAK";
-		}
-		
 	}
 	else{
 		resp += "NAK";
@@ -995,7 +1064,11 @@ module.exports.processCommand = processCommand;
 
 var intStr = function(val, length){
 	var intval = Number.parseInt(val);
-	console.log("VAL="+intval);
+	//check NaN
+	if (isNaN(intval) ){
+		intval = 0.0
+	}
+	
 	if (intval < 0){
 		intval = intval*(-1);
 	}
@@ -1011,6 +1084,12 @@ var intStr = function(val, length){
 var floatStr = function (val, before, after){
 	var len = before + after + 1 ;
 	var ff = Number.parseFloat(val);
+	//check NaN
+	if (isNaN(ff) ){
+		ff = 0.0
+	}
+
+
 	if (ff < 0){
 		ff = ff*(-1);
 	}

@@ -9,7 +9,7 @@ label{
 
 #console-box{
 	height: 100%;
-	background-color: #121212;
+	background-color: #300a24;
 	color:white;
 }
 
@@ -73,6 +73,13 @@ label{
 	margin-right: 5px;
 	padding-left: 3px;
 	width:auto;
+
+	letter-spacing: 1px;
+
+	font-weight: bold;
+	font-family: system, -apple-system, ".SFNSDisplay-Regular", "Helvetica Neue", Helvetica, "Segoe UI", sans-serif;
+  
+
 }
 
 .cons-ln-default{

@@ -66,7 +66,7 @@ Vue.component('config-panel',{
     }
 })
 
-Vue.component('config-input-cb',{
+var cicComp = Vue.component('config-input-cb',{
     props: ['value', 'label'],
     template: `
         <div>
@@ -74,11 +74,11 @@ Vue.component('config-input-cb',{
             <input
             type="checkbox"
             :checked="value"
-            @change="change"> {{ label }}
+            @change="$emit('input', $event.target.checked)"> {{ label }}
           </label>
         </div>
       `,
-      data:function(){
+      /*data:function(){
         return {
           checked:this.value
         }
@@ -88,7 +88,7 @@ Vue.component('config-input-cb',{
           this.checked = !this.checked;
           this.$emit('input', this.checked);
         }
-      }
+      }*/
 })
 
 Vue.component('config-input-sel',{
@@ -155,14 +155,18 @@ Vue.component('console-area', {
   template:`          
   <div id="console-box" >
     <div id="console-tools-box">
-    console : 
-    <input type="text" id="console-cmd" placeholder="try a command"
-    @keyup="keyup">
+    <button class="btn btn-mini btn-default icon icon-trash" v-on:click="clearConsole()">
+            clear console
+      </button>
+      <span style="margin-left:30px;"></span>
+      <input type="text" id="console-cmd" placeholder="try a command"
+      @keyup="keyup">
+      
     </div>
-      <div id="console-body"" >
+    <div id="console-body"" >
           <slot></slot>
-      </div>
-   </div>
+    </div>
+  </div>
    `,
    methods:{
     keyup:function(event){
@@ -171,6 +175,10 @@ Vue.component('console-area', {
         //event.srcElement.value = "";
       }
       
+    },
+    clearConsole:function(event){
+      const cbody = document.getElementById("console-body")
+      cbody.innerHTML=""
     }
    }
 })
@@ -319,8 +327,8 @@ var vueAppControlBox = new Vue({
       configs:{
         deep:true,
         handler:function(val, oldval){
-          console.log("Inverter UI config changed : ");
-          //console.log(this.configs);
+         
+          console.log(this.configs);
           ipcRenderer.send("ui-inv-cnf-change",this.configs);
 
         }
@@ -418,7 +426,7 @@ ipcRenderer.on('comm-tx', (event, message)=>{
 
 ipcRenderer.on('sim-inv-cnf-change', (event, newconf)=>{
   vueAppControlBox.configs = newconf;
-  console.log(vueAppControlBox.configs)
+  //console.log(vueAppControlBox.configs)
 });
 
 

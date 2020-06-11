@@ -40,7 +40,7 @@ function createWindow(){
     Menu.setApplicationMenu(menu);
 	
 
-	//win.webContents.openDevTools();
+	win.webContents.openDevTools();
 
 	win.on('closed', () => {
 		win = null;
@@ -184,6 +184,7 @@ ipcMain.on('ui-cmd-exe', (event, command)=>{
 
 ipcMain.on('ui-inv-cnf-change', (event, uicnf)=>{
 	appUpdateInvState(uicnf);
+	//console.log(uicnf);
 })
 
 ipcMain.on('ui-ready', (event, data)=>{
@@ -195,6 +196,7 @@ ipcMain.on('ui-ready', (event, data)=>{
 var appUpdateInvState = function(uicnf){
 	//a whole copy of the UI config to the Simulator config
 	//Flags
+	TxtInvStatus.model_hint = uicnf.model_hint;
 	TxtInvStatus.mode = uicnf.mode;
 	TxtInvStatus.flags = uicnf.flags;
 	TxtInvStatus.general_status = uicnf.general_status ;
