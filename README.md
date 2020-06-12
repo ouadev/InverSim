@@ -1,6 +1,8 @@
 # InverSim 0.1
 This is an Electron JS application to simulate Axpert power inverters communication protocol.
 
+![Alt text](docs/inversim-0.1-ui.png?raw=true "InverSim 0.1 Screenshot")
+
 # Features
 + replies to commands sent via a serial link or UDP.
 + configure some general characteristics of the inverter : flags, warnings, and status data.
