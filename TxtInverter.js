@@ -316,9 +316,9 @@ var processCommand =  function(cmdbytes){
 	var payloadbytes = cmdbytes.subarray(0, cmdbytes.length-3);
 
 	var crc_rx = cmdbytes.subarray(payloadbytes.length,payloadbytes.length+2 );
-	console.log(crc_rx);
+	
 	var crc = crc16(payloadbytes);
-	console.log( crc);
+	
 
 
 	if(crc.equals(crc_rx) == false ){

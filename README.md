@@ -10,6 +10,8 @@ This is an Electron JS application to simulate Axpert power inverters communicat
 + a console to view the received commands and sent responses.
 + possibility to send commands to the simulator on the UI.
 
+# Download
+releases : https://github.com/ouadev/InverSim/releases
  
 # disclaimer
 The Axpert power inverters have several series and models, and there is no official specification for each model. 

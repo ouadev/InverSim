@@ -328,7 +328,7 @@ var vueAppControlBox = new Vue({
         deep:true,
         handler:function(val, oldval){
          
-          console.log(this.configs);
+          //console.log(this.configs);
           ipcRenderer.send("ui-inv-cnf-change",this.configs);
 
         }
